@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using CSharpFunctionalExtensions;
 
 namespace Users.Domain.ValueObject
 {
@@ -10,10 +7,21 @@ namespace Users.Domain.ValueObject
     /// record - сравнивает по значениям полей
     /// record - не изменяемый тип (immutable)
     /// </summary>
-    public record Email
+    public class Email
     {
         public string Value { get; }
-        public Email(string value) => Value = value;
-        
+        private Email(string value) => Value = value;
+
+        public static Result<Email> Create(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return Result.Failure<Email>("Email cannot be empty");
+
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))//проверка на корректность email
+            {
+                return Result.Failure<Email>("Invalid email format");
+            }
+            return Result.Success(new Email(email));
+        }
     }
 }
