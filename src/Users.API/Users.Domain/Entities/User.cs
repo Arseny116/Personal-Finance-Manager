@@ -8,11 +8,11 @@ namespace Users.Domain.Entities
         public Guid Id { get; set; }
         public string FirstName { get; set; }
 
-        //Добавить Value Object Password 
-        public  Password password { get;  set; }
         public string LastName { get; set; }
 
-        //Добавить Value Object Email
+        public  Password password { get;  set; }
+ 
+
         public Email Email { get;  set; }
         public bool IsActive { get;  set; }
 
