@@ -8,11 +8,11 @@ namespace Users.Domain.Entities
         public Guid Id { get; set; }
         public string FirstName { get; set; }
 
-        //Добавить Value Object Password 
-        public  Password password { get;  set; }
         public string LastName { get; set; }
 
-        //Добавить Value Object Email
+        public  Password password { get;  set; }
+ 
+
         public Email Email { get;  set; }
         public bool IsActive { get;  set; }
 
@@ -66,9 +66,6 @@ namespace Users.Domain.Entities
                 return Result.Failure<User>("Last name can only contain letters, spaces and hyphens");
 
 
-            
-
-     
             var forbiddenNames = new[] { "admin", "root", "superuser" };
             if (forbiddenNames.Contains(firstName.ToLower()) ||
                 forbiddenNames.Contains(lastName.ToLower()))
@@ -85,6 +82,58 @@ namespace Users.Domain.Entities
 
             return Result.Success(user);
         }
+        public Result UpdateName(string firstName, string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+                return Result.Failure("First name cannot be empty");
 
+            if (string.IsNullOrWhiteSpace(lastName))
+                return Result.Failure("Last name cannot be empty");
+
+     
+            if (firstName == FirstName && lastName == LastName)
+                return Result.Failure("Name has not changed");
+
+            FirstName = firstName.Trim();//Trim удаляет пробелы в начале и конце строки
+            LastName = lastName.Trim();
+            UpdatedAt = DateTime.UtcNow;
+
+            return Result.Success("Name is change !");
+        }
+
+
+        public Result ChangeEmail(string newEmail)
+        {
+            var emailResult = Email.Create(newEmail);
+            if (emailResult.IsFailure)
+                return Result.Failure(emailResult.Error);
+
+            //Старый email и новый email совпадают
+            if (Email.Value == newEmail)
+                return Result.Failure("Email has not changed");
+
+            Email = emailResult.Value;
+            UpdatedAt = DateTime.UtcNow;
+            return Result.Success();
+        }
+
+        /// <summary>
+        /// Типо отключает пользователя
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+
+        /// <summary>
+        /// Типо включает пользователя
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

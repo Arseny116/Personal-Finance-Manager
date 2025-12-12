@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
 
 namespace Users.Domain.ValueObject
 {
-    public record Password
+    /// <summary>
+    /// Реализовать Value Object абстракцию
+    /// </summary>
+    public class Password
     {
         public string Value { get; }
-        public Password(string value) => Value = value;
+        private Password(string value) => Value = value;
+
+        public static Result<Password> Create(string val)
+        {
+            // Реализовать логику валидации пароля
+            return Result.Success(new Password(val));
+        }
+
     }
 }
