@@ -10,14 +10,14 @@ namespace Users.Domain.Entities
 
         public string LastName { get; set; }
 
-        public  Password password { get;  set; }
- 
+        public Password Password { get; set; }
 
-        public Email Email { get;  set; }
-        public bool IsActive { get;  set; }
 
-        public DateTime? UpdatedAt { get;  set; }
-        public DateTime CreatedAt { get;  set; }
+        public Email Email { get; set; }
+        public bool IsActive { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
         /// Инкапсулируем создание класса:
@@ -27,7 +27,7 @@ namespace Users.Domain.Entities
         /// <param name="lastName"></param>
         /// <param name="email"></param>
         /// <param name="CreatedAt"></param>
-        private User(Guid id, string firstName, string lastName, Email email, DateTime createdAt)
+        private User(Guid id, string firstName, string lastName, Email email, Password password, DateTime createdAt)
         {
             Id = Id;
             FirstName = firstName;
@@ -44,7 +44,7 @@ namespace Users.Domain.Entities
         /// <param name="lastName"></param>
         /// <param name="email"></param>
         /// <returns></returns>
-        public static  Result<User> Create(string firstName, string lastName, Email email )
+        public static Result<User> Create(string firstName, string lastName, Email email, Password password)
         {
             if (string.IsNullOrWhiteSpace(firstName))
                 return Result.Failure<User>("First name cannot be empty");
@@ -55,7 +55,7 @@ namespace Users.Domain.Entities
             if (!Regex.IsMatch(firstName, @"^[a-zA-Zа-яА-ЯёЁ\s\-]+$"))
                 return Result.Failure<User>("First name can only contain letters, spaces and hyphens");
 
-           
+
             if (string.IsNullOrWhiteSpace(lastName))
                 return Result.Failure<User>("Last name cannot be empty");
 
@@ -71,14 +71,15 @@ namespace Users.Domain.Entities
                 forbiddenNames.Contains(lastName.ToLower()))
                 return Result.Failure<User>("This name is not allowed");
 
-            User user = new User(Guid.NewGuid(), firstName, lastName, email, DateTime.UtcNow)
+            User user = new User(Guid.NewGuid(), firstName, lastName, email, password, DateTime.UtcNow)
             {
                 FirstName = firstName,
                 LastName = lastName,
-                Email = email,
+                Password = password,
                 IsActive = true,
+                Email = email,
                 CreatedAt = DateTime.UtcNow
-            };  
+            };
 
             return Result.Success(user);
         }
@@ -90,7 +91,7 @@ namespace Users.Domain.Entities
             if (string.IsNullOrWhiteSpace(lastName))
                 return Result.Failure("Last name cannot be empty");
 
-     
+
             if (firstName == FirstName && lastName == LastName)
                 return Result.Failure("Name has not changed");
 

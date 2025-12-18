@@ -1,31 +1,22 @@
 ﻿using Users.Application.Queries;
 using Users.Domain.DTOs;
-using Users.Domain.Interface;
 using MediatR;
-using System.Linq;
-
+using Microsoft.EntityFrameworkCore;
+using Users;
+using Users.Domain.Interface;
 namespace Users.Application.Handlers
 {
-    public class GetUserHandler : IRequestHandler<GetUsersQuery, List<UserDTO>>
+    public class GetUserHandler(IQueriesUser qs) : IRequestHandler<GetUsersQuery, List<UserDTO>>
     {
-        private readonly IRepositoryUsers _repositoryUsers;
-
-        public GetUserHandler(IRepositoryUsers repositoryUsers)
-        {
-            _repositoryUsers = repositoryUsers;
-        }
-
         public async Task<List<UserDTO>> Handle(GetUsersQuery uq, CancellationToken cancellationToken)
         {
-          
-            var users = _repositoryUsers.GetAllUsers().Result;
-
-           
-            var userDtos = users
-                .Select(x => new UserDTO(x.FirstName, x.LastName, x.Email))
-                .ToList(); 
-
-            return userDtos;
+            var user = await qs.GetUsers();
+            return user.Select(u => new UserDTO
+            {
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email
+            }).ToList();
         }
     }
 }
