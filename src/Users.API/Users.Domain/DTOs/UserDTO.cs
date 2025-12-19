@@ -2,7 +2,7 @@
 using Users.Domain.ValueObject;
 namespace Users.Domain.DTOs
 {
-    public class UserDTO(string FirstName, string LastName, Email Email)
+    public class UserDTO()
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
