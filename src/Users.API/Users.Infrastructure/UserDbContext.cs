@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Users.Domain.Interface;
+using Users.Infrastructure.DbModels;
 
 
 namespace Users.Infrastructure
@@ -13,7 +12,7 @@ namespace Users.Infrastructure
 
         }
 
-        public DbSet<UserDbContext> Users { get; set; }
+        public DbSet<UserDbModel> Users { get; set; }
     }
 
    

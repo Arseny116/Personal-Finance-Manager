@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
+using Users.Domain.Entities;
 
 namespace Users.Application.Commands
 {
-    public record CreateUserCommand(string FirstName, string LastName , string Password)  : IRequest;
+    public record CreateUserCommand(User user)  : IRequest;
 }

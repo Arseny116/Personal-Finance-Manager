@@ -13,7 +13,8 @@ namespace Users.Application.Handlers
         }
         public async Task Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-             await  _usersRepository.CreateUser(request.FirstName, request.LastName, request.Password);
+             await  _usersRepository.CreateUser(request.user);
+
         }
 
     }
